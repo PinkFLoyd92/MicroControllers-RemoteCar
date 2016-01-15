@@ -1,0 +1,11 @@
+
+* Main program
+  - Esperar conexión con aplicación en android.
+    - Mostrar mensaje en LCD "Esperando..."
+  - Al establecerse la conexión se entrará en el modo por defecto
+    "Manual"
+    - Se muestra el mensaje en el LCD "Conexión manual... Esperando instrucciones..."
+      - Verificar el ascii que se envía al pic (r(right),l(left),u(up),d(down))
+      - Mover a pasos mientras se tenga pulsada la opción, verificar
+        no chocar en cada envío de pulso por sensor de ultrasonido.
+
