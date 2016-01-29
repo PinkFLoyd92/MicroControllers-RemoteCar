@@ -237,6 +237,7 @@ b4
 b5
 b6
 b7
+bandera_mover
 baudctl
 bcd2dec
 bcd2dec16
@@ -396,6 +397,7 @@ cf_write_byte
 cf_write_init
 cf_write_sector
 character8x7
+checkadc
 chs0
 chs0_bit
 chs1
@@ -426,6 +428,7 @@ d_a_bit
 d_bit
 d_not_a
 d_not_a_bit
+darvuelta
 data_address
 data_address_bit
 dc
@@ -537,6 +540,8 @@ gcen_bit
 get_fosc_khz
 gie
 gie_bit
+girarderecha
+girarizquierda
 glcd_box
 glcd_circle
 glcd_circle_fill
@@ -600,6 +605,7 @@ inte
 inte_bit
 intedg
 intedg_bit
+interrupt
 intf
 intf_bit
 inttohex
@@ -647,9 +653,21 @@ labs
 lcd_chr
 lcd_chr_cp
 lcd_cmd
+lcd_d4
+lcd_d4_direction
+lcd_d5
+lcd_d5_direction
+lcd_d6
+lcd_d6_direction
+lcd_d7
+lcd_d7_direction
+lcd_en
+lcd_en_direction
 lcd_init
 lcd_out
 lcd_out_cp
+lcd_rs
+lcd_rs_direction
 ldexp
 ldiv
 log
@@ -665,7 +683,6 @@ longwordtostrwithzeros
 ltrim
 lts
 lts_bit
-main
 main
 malloc
 man_break
@@ -696,6 +713,9 @@ mm_nrfreeblocksused
 mm_possiblyfragmented
 mm_totalfreememsize
 modf
+moveratras
+moverenautomatico
+movermanual
 msk
 msk0
 msk0_bit
@@ -771,6 +791,7 @@ p1m0
 p1m0_bit
 p1m1
 p1m1_bit
+pararvehiculo
 pcl
 pclath
 pcon
@@ -1385,6 +1406,8 @@ t6963c_writecommand
 t6963c_writedata
 tan
 tanh
+temp_res_backward
+temp_res_forward
 time_datetoepoch
 time_epochtodate
 time_jd1970
@@ -1535,8 +1558,16 @@ txif
 txif_bit
 txreg
 txsta
+txtabajo
+txtarriba
+txtautomatic
+txtdefault
+txtderecha
+txtizquierda
 ua
 ua_bit
+uart_rd
+uart_rd_temp
 uart1_data_ready
 uart1_init
 uart1_read
