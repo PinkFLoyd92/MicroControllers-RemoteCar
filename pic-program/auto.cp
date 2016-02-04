@@ -1,5 +1,5 @@
 #line 1 "Z:/home/sebas/Documents/ESPOL/Laboratorio de Microcontroladores/proyecto2doparcial/pic-program/auto.c"
-
+#line 21 "Z:/home/sebas/Documents/ESPOL/Laboratorio de Microcontroladores/proyecto2doparcial/pic-program/auto.c"
 sbit LCD_RS at RB4_bit;
 sbit LCD_EN at RB5_bit;
 sbit LCD_D4 at RB0_bit;
@@ -16,12 +16,14 @@ sbit LCD_D7_Direction at TRISB3_bit;
 
 
 
-char txtDefault[] = "Esperando Seleccion de Modo (Automático/Manual)...";
-char txtArriba[] = "Arriba...";
-char txtIzquierda[] = "Izquierda...";
-char txtDerecha[] = "Derecha...";
-char txtAbajo[] = "Abajo...";
+
+char txtDefault[] = "Esperando Seleccion A-M";
+char txtArriba[] = "Arriba";
+char txtIzquierda[] = "Izquierda";
+char txtDerecha[] = "Derecha";
+char txtAbajo[] = "Abajo";
 char txtAutomatic[] = "Automatico";
+
 
 
 unsigned int temp_res_forward;
@@ -30,129 +32,229 @@ unsigned int temp_res_backward;
 
 char uart_rd;
 char uart_rd_temp;
-#line 33 "Z:/home/sebas/Documents/ESPOL/Laboratorio de Microcontroladores/proyecto2doparcial/pic-program/auto.c"
+#line 54 "Z:/home/sebas/Documents/ESPOL/Laboratorio de Microcontroladores/proyecto2doparcial/pic-program/auto.c"
 int bandera_mover = 1;
+int bandera_automatico = 1;
+
+int contadorInterrupt = 0;
+
+void setupTimer1(){
 
 
+T1CON = 0b00100000;
+INTCON.GIE = 1;
+INTCON.PEIE = 1;
+INTCON.RBIE = 1;
+INTCON.RBIF = 0;
 
-void darVuelta(){
 
+IOCB.IOCB6 = 1;
 }
-void moverManual(){
- while (uart_rd_temp != 'e') {
- if (uart_rd_temp == 'u' && bandera_mover) {
- Lcd_Out(2,6,txtArriba);
- }
- else if (uart_rd_temp == 'd' && bandera_mover) {
- Lcd_Out(2,6,txtAbajo);
- }
- else if (uart_rd_temp == 'l' && bandera_mover) {
- Lcd_Out(2,6,txtAbajo);
- }
- else if (uart_rd_temp == 'r' && bandera_mover) {
- Lcd_Out(2,6,txtAbajo);
- }
- }
+void waitSignal(){
+TMR1H = 0;
+TMR1L = 0;
+if( PORTB.RB6  == 0){
+ PORTA.RA0  = 0;
+Delay_us(2);
+ PORTA.RA0  = 1;
+Delay_us(10);
+ PORTA.RA0  = 0;
+}
+}
+
+
+
+
+void avanzarVehiculo(){
+RC1_bit = 1;
+RC2_bit = 1;
+RC7_bit = 0;
+RC6_bit = 0;
 }
 
 void pararVehiculo(){
- RC1_bit = 0;
- RC2_bit = 0;
- RC7_bit = 0;
- RC6_bit = 0;
+RC1_bit = 0;
+RC2_bit = 0;
+RC7_bit = 0;
+RC6_bit = 0;
 }
-#line 66 "Z:/home/sebas/Documents/ESPOL/Laboratorio de Microcontroladores/proyecto2doparcial/pic-program/auto.c"
+#line 102 "Z:/home/sebas/Documents/ESPOL/Laboratorio de Microcontroladores/proyecto2doparcial/pic-program/auto.c"
 void girarDerecha(){
- RC1_bit = 1;
- RC2_bit = 0;
- RC5_bit = 0;
- RC4_bit = 0;
+RC1_bit = 1;
+RC2_bit = 0;
+RC5_bit = 0;
+RC4_bit = 0;
+Delay_ms(2000);
+
+RC1_bit = 0;
+RC2_bit = 0;
+RC7_bit = 0;
+RC6_bit = 0;
 }
 
 void girarIzquierda(){
- RC1_bit = 0;
- RC2_bit = 1;
- RC5_bit = 0;
- RC4_bit = 0;
+RC1_bit = 0;
+RC2_bit = 1;
+RC5_bit = 0;
+RC4_bit = 0;
+Delay_ms(2000);
+
+RC1_bit = 0;
+RC2_bit = 0;
+RC7_bit = 0;
+RC6_bit = 0;
 }
 
 
 void moverAtras(){
- RC1_bit = 0;
- RC2_bit = 0;
- RC5_bit = 1;
- RC4_bit = 1;
+RC1_bit = 0;
+RC2_bit = 0;
+RC5_bit = 1;
+RC4_bit = 1;
 }
+
+void darVuelta(){
+girarDerecha();
+avanzarVehiculo();
+Delay_ms(1000);
+girarIzquierda();
+avanzarVehiculo();
+}
+void cargarDato(){
+if (UART1_Data_Ready())
+ uart_rd_temp = UART1_Read();
+
+}
+void moverManual(){
+uart_rd_temp = ' ';
+cargarDato();
+bandera_automatico = 0;
+while (uart_rd_temp != 'e') {
+
+waitSignal();
+cargarDato();
+if (uart_rd_temp == 'u' && bandera_mover) {
+Lcd_Out(2,6,txtArriba);
+avanzarVehiculo();
+}
+ else if (uart_rd_temp == 'd' && bandera_mover) {
+Lcd_Out(2,6,txtAbajo);
+moverAtras();
+}
+ else if (uart_rd_temp == 'l' && bandera_mover) {
+Lcd_Out(2,6,txtAbajo);
+girarIzquierda();
+avanzarVehiculo();
+}
+ else if (uart_rd_temp == 'r' && bandera_mover) {
+Lcd_Out(2,6,txtAbajo);
+girarDerecha();
+avanzarVehiculo();
+}
+
+}
+pararVehiculo();
+Lcd_Cmd(_LCD_CLEAR);
+Lcd_Out(2,6,"Se salió de modo manual.");
+Delay_ms(100);
+uart_rd_temp = ' ';
+
+
+}
+
 void moverEnAutomatico(){
- while (uart_rd_temp != 'e') {
- Lcd_Out(2,6,txtAutomatic);
+uart_rd_temp = ' ';
+bandera_automatico = 1;
+Lcd_Cmd(_LCD_CLEAR);
+Lcd_Out(2,6,txtAutomatic);
 
  RC1_bit = 1;
  RC2_bit = 1;
  RC5_bit = 0;
  RC4_bit = 0;
+ cargarDato();
+ while (uart_rd_temp != 'e') {
+ waitSignal();
+ cargarDato();
 
 
- }
-
-}
-#line 101 "Z:/home/sebas/Documents/ESPOL/Laboratorio de Microcontroladores/proyecto2doparcial/pic-program/auto.c"
-int checkADC(valor){
- bandera_mover = 0;
- return -1;
-}
-
-void interrupt(){
-#line 116 "Z:/home/sebas/Documents/ESPOL/Laboratorio de Microcontroladores/proyecto2doparcial/pic-program/auto.c"
- if (PIR1 & 0x01)
+ if(uart_rd_temp == 'e')
  {
-
- PIR1 &= ~0x01;
- T1CON &= ~0x01;
-
-
- temp_res_forward = ADC_Read(2);
- temp_res_backward = ADC_Read(3);
-
-
- TMR1L = 0x24;
- TMR1H = 0xCF;
- T1CON |= 0x01;
- return;
+ RC1_bit = 0;
+ RC2_bit = 0;
+ RC5_bit = 0;
+ RC4_bit = 0;
  }
+
+ }
+ pararVehiculo();
+ bandera_automatico = 0;
+}
+
+
+unsigned int distance_cm = 0, distance_inc = 0, TMR = 0;
+void interrupt(){
+ unsigned long duration = 0;
+
+
+ if(INTCON.RBIF){
+ T1CON.TMR1ON = 1;
+ while( PORTB.RB6  == 1);
+ T1CON.TMR1ON = 0;
+ TMR = (unsigned int) TMR1H << 8;
+ TMR = TMR + TMR1L;
+
+ duration = (TMR/10) * 8;
+
+ distance_cm = duration / 58 ;
+ distance_inc = duration / 148;
+ if(distance_cm < 30)
+ {
+ if (!bandera_mover && bandera_automatico) {
+ darVuelta();
+ }else if(!bandera_mover && !bandera_automatico){
+ pararVehiculo();
+ bandera_mover = 0;
+ }
+ }else {
+ bandera_mover = 1;
+ avanzarVehiculo();
+ }
+ distance_cm = 0, distance_inc = 0, TMR = 0;
+
+ INTCON.RBIF = 0;
+ }
+
+ contadorInterrupt++;
+ return;
 }
 void main() {
- ANSEL = 0b00001100;
+
+ TRISA = 0b00000000;
+ TRISB = 0b01000000;
+ ANSEL = 0;
  ANSELH = 0;
  C1ON_bit = 0;
  C2ON_bit = 0;
- INTCON = 0x80;
- T1CON = 0x00;
- TMR1L = 0x24;
- TMR1H = 0xCF;
- T1CON |= 0x01;
- PIE1 = 0x01;
- TRISC = 0;
+ INTCON = 0b10100000;
+
+ OPTION_REG = 0b10000111;
+ TRISC = 0b10000000;
  PORTC = 0;
- PWM1_Init(5000);
- PWM2_Init(5000);
- PWM1_Start();
- PWM2_Start();
- PWM1_Set_Duty(16);
- PWM2_Set_Duty(16);
-
+ setupTimer1();
  Delay_us(10);
- UART1_Init(9600);
- Delay_ms(100);
-
  Lcd_Init();
 
- Lcd_Out(2,6,txtDefault);
- while (1) {
- Lcd_Out(2,6,txtDefault);
- if (UART1_Data_Ready()) {
 
- uart_rd = 'A';
+ Lcd_Out(2,0,txtDefault);
+ UART1_Init(9600);
+ Delay_ms(100);
+ moverEnAutomatico();
+ while (1) {
+ waitSignal();
+ if (UART1_Data_Ready()) {
+ uart_rd = UART1_Read();
+ waitSignal();
  switch (uart_rd) {
  case 'A': {
  Lcd_Out(2,6,txtAutomatic);

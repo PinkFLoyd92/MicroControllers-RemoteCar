@@ -1,31 +1,259 @@
 
+_setupTimer1:
+
+;auto.c,59 :: 		void setupTimer1(){
+;auto.c,62 :: 		T1CON = 0b00100000;
+	MOVLW      32
+	MOVWF      T1CON+0
+;auto.c,63 :: 		INTCON.GIE = 1;
+	BSF        INTCON+0, 7
+;auto.c,64 :: 		INTCON.PEIE = 1;
+	BSF        INTCON+0, 6
+;auto.c,65 :: 		INTCON.RBIE = 1;
+	BSF        INTCON+0, 3
+;auto.c,66 :: 		INTCON.RBIF = 0;
+	BCF        INTCON+0, 0
+;auto.c,69 :: 		IOCB.IOCB6 = 1;
+	BSF        IOCB+0, 6
+;auto.c,70 :: 		}
+	RETURN
+; end of _setupTimer1
+
+_waitSignal:
+
+;auto.c,71 :: 		void waitSignal(){
+;auto.c,72 :: 		TMR1H = 0;          // Clear Timer1
+	CLRF       TMR1H+0
+;auto.c,73 :: 		TMR1L = 0;
+	CLRF       TMR1L+0
+;auto.c,74 :: 		if(Echo == 0){
+	BTFSC      PORTB+0, 6
+	GOTO       L_waitSignal0
+;auto.c,75 :: 		Trig = 0;
+	BCF        PORTA+0, 0
+;auto.c,76 :: 		Delay_us(2);
+	NOP
+	NOP
+	NOP
+	NOP
+;auto.c,77 :: 		Trig = 1;
+	BSF        PORTA+0, 0
+;auto.c,78 :: 		Delay_us(10); // Send LOW-to-HIGH Pulse of 10us to Ultrasonic
+	MOVLW      6
+	MOVWF      R13+0
+L_waitSignal1:
+	DECFSZ     R13+0, 1
+	GOTO       L_waitSignal1
+	NOP
+;auto.c,79 :: 		Trig = 0;
+	BCF        PORTA+0, 0
+;auto.c,80 :: 		}
+L_waitSignal0:
+;auto.c,81 :: 		}
+	RETURN
+; end of _waitSignal
+
+_avanzarVehiculo:
+
+;auto.c,86 :: 		void avanzarVehiculo(){
+;auto.c,87 :: 		RC1_bit = 1;
+	BSF        RC1_bit+0, 1
+;auto.c,88 :: 		RC2_bit = 1;
+	BSF        RC2_bit+0, 2
+;auto.c,89 :: 		RC7_bit = 0;
+	BCF        RC7_bit+0, 7
+;auto.c,90 :: 		RC6_bit = 0;
+	BCF        RC6_bit+0, 6
+;auto.c,91 :: 		}
+	RETURN
+; end of _avanzarVehiculo
+
+_pararVehiculo:
+
+;auto.c,93 :: 		void pararVehiculo(){
+;auto.c,94 :: 		RC1_bit = 0;
+	BCF        RC1_bit+0, 1
+;auto.c,95 :: 		RC2_bit = 0;
+	BCF        RC2_bit+0, 2
+;auto.c,96 :: 		RC7_bit = 0;
+	BCF        RC7_bit+0, 7
+;auto.c,97 :: 		RC6_bit = 0;
+	BCF        RC6_bit+0, 6
+;auto.c,98 :: 		}
+	RETURN
+; end of _pararVehiculo
+
+_girarDerecha:
+
+;auto.c,102 :: 		void girarDerecha(){
+;auto.c,103 :: 		RC1_bit = 1;
+	BSF        RC1_bit+0, 1
+;auto.c,104 :: 		RC2_bit = 0;
+	BCF        RC2_bit+0, 2
+;auto.c,105 :: 		RC5_bit = 0;
+	BCF        RC5_bit+0, 5
+;auto.c,106 :: 		RC4_bit = 0;
+	BCF        RC4_bit+0, 4
+;auto.c,107 :: 		Delay_ms(2000);               /* 2 segundos de giro */
+	MOVLW      21
+	MOVWF      R11+0
+	MOVLW      75
+	MOVWF      R12+0
+	MOVLW      190
+	MOVWF      R13+0
+L_girarDerecha2:
+	DECFSZ     R13+0, 1
+	GOTO       L_girarDerecha2
+	DECFSZ     R12+0, 1
+	GOTO       L_girarDerecha2
+	DECFSZ     R11+0, 1
+	GOTO       L_girarDerecha2
+	NOP
+;auto.c,109 :: 		RC1_bit = 0;
+	BCF        RC1_bit+0, 1
+;auto.c,110 :: 		RC2_bit = 0;
+	BCF        RC2_bit+0, 2
+;auto.c,111 :: 		RC7_bit = 0;
+	BCF        RC7_bit+0, 7
+;auto.c,112 :: 		RC6_bit = 0;
+	BCF        RC6_bit+0, 6
+;auto.c,113 :: 		}
+	RETURN
+; end of _girarDerecha
+
+_girarIzquierda:
+
+;auto.c,115 :: 		void girarIzquierda(){
+;auto.c,116 :: 		RC1_bit = 0;
+	BCF        RC1_bit+0, 1
+;auto.c,117 :: 		RC2_bit = 1;
+	BSF        RC2_bit+0, 2
+;auto.c,118 :: 		RC5_bit = 0;
+	BCF        RC5_bit+0, 5
+;auto.c,119 :: 		RC4_bit = 0;
+	BCF        RC4_bit+0, 4
+;auto.c,120 :: 		Delay_ms(2000);               /* 2 segundos de giro */
+	MOVLW      21
+	MOVWF      R11+0
+	MOVLW      75
+	MOVWF      R12+0
+	MOVLW      190
+	MOVWF      R13+0
+L_girarIzquierda3:
+	DECFSZ     R13+0, 1
+	GOTO       L_girarIzquierda3
+	DECFSZ     R12+0, 1
+	GOTO       L_girarIzquierda3
+	DECFSZ     R11+0, 1
+	GOTO       L_girarIzquierda3
+	NOP
+;auto.c,122 :: 		RC1_bit = 0;
+	BCF        RC1_bit+0, 1
+;auto.c,123 :: 		RC2_bit = 0;
+	BCF        RC2_bit+0, 2
+;auto.c,124 :: 		RC7_bit = 0;
+	BCF        RC7_bit+0, 7
+;auto.c,125 :: 		RC6_bit = 0;
+	BCF        RC6_bit+0, 6
+;auto.c,126 :: 		}
+	RETURN
+; end of _girarIzquierda
+
+_moverAtras:
+
+;auto.c,129 :: 		void moverAtras(){
+;auto.c,130 :: 		RC1_bit = 0;
+	BCF        RC1_bit+0, 1
+;auto.c,131 :: 		RC2_bit = 0;
+	BCF        RC2_bit+0, 2
+;auto.c,132 :: 		RC5_bit = 1;
+	BSF        RC5_bit+0, 5
+;auto.c,133 :: 		RC4_bit = 1;
+	BSF        RC4_bit+0, 4
+;auto.c,134 :: 		}
+	RETURN
+; end of _moverAtras
+
 _darVuelta:
 
-;auto.c,37 :: 		void darVuelta(){
-;auto.c,39 :: 		}
+;auto.c,136 :: 		void darVuelta(){
+;auto.c,137 :: 		girarDerecha();
+	CALL       _girarDerecha+0
+;auto.c,138 :: 		avanzarVehiculo();
+	CALL       _avanzarVehiculo+0
+;auto.c,139 :: 		Delay_ms(1000);
+	MOVLW      11
+	MOVWF      R11+0
+	MOVLW      38
+	MOVWF      R12+0
+	MOVLW      93
+	MOVWF      R13+0
+L_darVuelta4:
+	DECFSZ     R13+0, 1
+	GOTO       L_darVuelta4
+	DECFSZ     R12+0, 1
+	GOTO       L_darVuelta4
+	DECFSZ     R11+0, 1
+	GOTO       L_darVuelta4
+	NOP
+	NOP
+;auto.c,140 :: 		girarIzquierda();
+	CALL       _girarIzquierda+0
+;auto.c,141 :: 		avanzarVehiculo();
+	CALL       _avanzarVehiculo+0
+;auto.c,142 :: 		}
 	RETURN
 ; end of _darVuelta
 
+_cargarDato:
+
+;auto.c,143 :: 		void cargarDato(){
+;auto.c,144 :: 		if (UART1_Data_Ready())     // If data is received,
+	CALL       _UART1_Data_Ready+0
+	MOVF       R0+0, 0
+	BTFSC      STATUS+0, 2
+	GOTO       L_cargarDato5
+;auto.c,145 :: 		uart_rd_temp = UART1_Read();     // leer el dato recibido del celular
+	CALL       _UART1_Read+0
+	MOVF       R0+0, 0
+	MOVWF      _uart_rd_temp+0
+L_cargarDato5:
+;auto.c,147 :: 		}
+	RETURN
+; end of _cargarDato
+
 _moverManual:
 
-;auto.c,40 :: 		void moverManual(){
-;auto.c,41 :: 		while (uart_rd_temp != 'e') { /* Si se le envía e se sale de modo manual */
-L_moverManual0:
+;auto.c,148 :: 		void moverManual(){
+;auto.c,149 :: 		uart_rd_temp = ' ';
+	MOVLW      32
+	MOVWF      _uart_rd_temp+0
+;auto.c,150 :: 		cargarDato();
+	CALL       _cargarDato+0
+;auto.c,151 :: 		bandera_automatico = 0;       /* Se limpia la bandera de automatico por si acaso. */
+	CLRF       _bandera_automatico+0
+	CLRF       _bandera_automatico+1
+;auto.c,152 :: 		while (uart_rd_temp != 'e') { /* Si se le envía e se sale de modo manual */
+L_moverManual6:
 	MOVF       _uart_rd_temp+0, 0
 	XORLW      101
 	BTFSC      STATUS+0, 2
-	GOTO       L_moverManual1
-;auto.c,42 :: 		if (uart_rd_temp == 'u' && bandera_mover) { /* Up: En la interrupción para el auto */
+	GOTO       L_moverManual7
+;auto.c,154 :: 		waitSignal();
+	CALL       _waitSignal+0
+;auto.c,155 :: 		cargarDato();
+	CALL       _cargarDato+0
+;auto.c,156 :: 		if (uart_rd_temp == 'u' && bandera_mover) { /* Up: En la interrupción para el auto */
 	MOVF       _uart_rd_temp+0, 0
 	XORLW      117
 	BTFSS      STATUS+0, 2
-	GOTO       L_moverManual4
+	GOTO       L_moverManual10
 	MOVF       _bandera_mover+0, 0
 	IORWF      _bandera_mover+1, 0
 	BTFSC      STATUS+0, 2
-	GOTO       L_moverManual4
-L__moverManual33:
-;auto.c,43 :: 		Lcd_Out(2,6,txtArriba);
+	GOTO       L_moverManual10
+L__moverManual52:
+;auto.c,157 :: 		Lcd_Out(2,6,txtArriba);
 	MOVLW      2
 	MOVWF      FARG_Lcd_Out_row+0
 	MOVLW      6
@@ -33,20 +261,22 @@ L__moverManual33:
 	MOVLW      _txtArriba+0
 	MOVWF      FARG_Lcd_Out_text+0
 	CALL       _Lcd_Out+0
-;auto.c,44 :: 		}
-	GOTO       L_moverManual5
-L_moverManual4:
-;auto.c,45 :: 		else if (uart_rd_temp == 'd' && bandera_mover) { /* Down:  */
+;auto.c,158 :: 		avanzarVehiculo();
+	CALL       _avanzarVehiculo+0
+;auto.c,159 :: 		}
+	GOTO       L_moverManual11
+L_moverManual10:
+;auto.c,160 :: 		else if (uart_rd_temp == 'd' && bandera_mover) { /* Down:  */
 	MOVF       _uart_rd_temp+0, 0
 	XORLW      100
 	BTFSS      STATUS+0, 2
-	GOTO       L_moverManual8
+	GOTO       L_moverManual14
 	MOVF       _bandera_mover+0, 0
 	IORWF      _bandera_mover+1, 0
 	BTFSC      STATUS+0, 2
-	GOTO       L_moverManual8
-L__moverManual32:
-;auto.c,46 :: 		Lcd_Out(2,6,txtAbajo);
+	GOTO       L_moverManual14
+L__moverManual51:
+;auto.c,161 :: 		Lcd_Out(2,6,txtAbajo);
 	MOVLW      2
 	MOVWF      FARG_Lcd_Out_row+0
 	MOVLW      6
@@ -54,20 +284,22 @@ L__moverManual32:
 	MOVLW      _txtAbajo+0
 	MOVWF      FARG_Lcd_Out_text+0
 	CALL       _Lcd_Out+0
-;auto.c,47 :: 		}
-	GOTO       L_moverManual9
-L_moverManual8:
-;auto.c,48 :: 		else if (uart_rd_temp == 'l' && bandera_mover) { /* left:  */
+;auto.c,162 :: 		moverAtras();
+	CALL       _moverAtras+0
+;auto.c,163 :: 		}
+	GOTO       L_moverManual15
+L_moverManual14:
+;auto.c,164 :: 		else if (uart_rd_temp == 'l' && bandera_mover) { /* left:  */
 	MOVF       _uart_rd_temp+0, 0
 	XORLW      108
 	BTFSS      STATUS+0, 2
-	GOTO       L_moverManual12
+	GOTO       L_moverManual18
 	MOVF       _bandera_mover+0, 0
 	IORWF      _bandera_mover+1, 0
 	BTFSC      STATUS+0, 2
-	GOTO       L_moverManual12
-L__moverManual31:
-;auto.c,49 :: 		Lcd_Out(2,6,txtAbajo);
+	GOTO       L_moverManual18
+L__moverManual50:
+;auto.c,165 :: 		Lcd_Out(2,6,txtAbajo);
 	MOVLW      2
 	MOVWF      FARG_Lcd_Out_row+0
 	MOVLW      6
@@ -75,20 +307,24 @@ L__moverManual31:
 	MOVLW      _txtAbajo+0
 	MOVWF      FARG_Lcd_Out_text+0
 	CALL       _Lcd_Out+0
-;auto.c,50 :: 		}
-	GOTO       L_moverManual13
-L_moverManual12:
-;auto.c,51 :: 		else if (uart_rd_temp == 'r' && bandera_mover) { /* right:  */
+;auto.c,166 :: 		girarIzquierda();
+	CALL       _girarIzquierda+0
+;auto.c,167 :: 		avanzarVehiculo();
+	CALL       _avanzarVehiculo+0
+;auto.c,168 :: 		}
+	GOTO       L_moverManual19
+L_moverManual18:
+;auto.c,169 :: 		else if (uart_rd_temp == 'r' && bandera_mover) { /* right:  */
 	MOVF       _uart_rd_temp+0, 0
 	XORLW      114
 	BTFSS      STATUS+0, 2
-	GOTO       L_moverManual16
+	GOTO       L_moverManual22
 	MOVF       _bandera_mover+0, 0
 	IORWF      _bandera_mover+1, 0
 	BTFSC      STATUS+0, 2
-	GOTO       L_moverManual16
-L__moverManual30:
-;auto.c,52 :: 		Lcd_Out(2,6,txtAbajo);
+	GOTO       L_moverManual22
+L__moverManual49:
+;auto.c,170 :: 		Lcd_Out(2,6,txtAbajo);
 	MOVLW      2
 	MOVWF      FARG_Lcd_Out_row+0
 	MOVLW      6
@@ -96,88 +332,70 @@ L__moverManual30:
 	MOVLW      _txtAbajo+0
 	MOVWF      FARG_Lcd_Out_text+0
 	CALL       _Lcd_Out+0
-;auto.c,53 :: 		}
-L_moverManual16:
-L_moverManual13:
-L_moverManual9:
-L_moverManual5:
-;auto.c,54 :: 		}
-	GOTO       L_moverManual0
-L_moverManual1:
-;auto.c,55 :: 		}
+;auto.c,171 :: 		girarDerecha();
+	CALL       _girarDerecha+0
+;auto.c,172 :: 		avanzarVehiculo();
+	CALL       _avanzarVehiculo+0
+;auto.c,173 :: 		}
+L_moverManual22:
+L_moverManual19:
+L_moverManual15:
+L_moverManual11:
+;auto.c,175 :: 		}
+	GOTO       L_moverManual6
+L_moverManual7:
+;auto.c,176 :: 		pararVehiculo();
+	CALL       _pararVehiculo+0
+;auto.c,177 :: 		Lcd_Cmd(_LCD_CLEAR);
+	MOVLW      1
+	MOVWF      FARG_Lcd_Cmd_out_char+0
+	CALL       _Lcd_Cmd+0
+;auto.c,178 :: 		Lcd_Out(2,6,"Se salió de modo manual.");
+	MOVLW      2
+	MOVWF      FARG_Lcd_Out_row+0
+	MOVLW      6
+	MOVWF      FARG_Lcd_Out_column+0
+	MOVLW      ?lstr1_auto+0
+	MOVWF      FARG_Lcd_Out_text+0
+	CALL       _Lcd_Out+0
+;auto.c,179 :: 		Delay_ms(100);
+	MOVLW      2
+	MOVWF      R11+0
+	MOVLW      4
+	MOVWF      R12+0
+	MOVLW      186
+	MOVWF      R13+0
+L_moverManual23:
+	DECFSZ     R13+0, 1
+	GOTO       L_moverManual23
+	DECFSZ     R12+0, 1
+	GOTO       L_moverManual23
+	DECFSZ     R11+0, 1
+	GOTO       L_moverManual23
+	NOP
+;auto.c,180 :: 		uart_rd_temp = ' ';
+	MOVLW      32
+	MOVWF      _uart_rd_temp+0
+;auto.c,183 :: 		}
 	RETURN
 ; end of _moverManual
 
-_pararVehiculo:
-
-;auto.c,57 :: 		void pararVehiculo(){
-;auto.c,58 :: 		RC1_bit = 0;
-	BCF        RC1_bit+0, 1
-;auto.c,59 :: 		RC2_bit = 0;
-	BCF        RC2_bit+0, 2
-;auto.c,60 :: 		RC7_bit = 0;
-	BCF        RC7_bit+0, 7
-;auto.c,61 :: 		RC6_bit = 0;
-	BCF        RC6_bit+0, 6
-;auto.c,62 :: 		}
-	RETURN
-; end of _pararVehiculo
-
-_girarDerecha:
-
-;auto.c,66 :: 		void girarDerecha(){
-;auto.c,67 :: 		RC1_bit = 1;
-	BSF        RC1_bit+0, 1
-;auto.c,68 :: 		RC2_bit = 0;
-	BCF        RC2_bit+0, 2
-;auto.c,69 :: 		RC5_bit = 0;
-	BCF        RC5_bit+0, 5
-;auto.c,70 :: 		RC4_bit = 0;
-	BCF        RC4_bit+0, 4
-;auto.c,71 :: 		}
-	RETURN
-; end of _girarDerecha
-
-_girarIzquierda:
-
-;auto.c,73 :: 		void girarIzquierda(){
-;auto.c,74 :: 		RC1_bit = 0;
-	BCF        RC1_bit+0, 1
-;auto.c,75 :: 		RC2_bit = 1;
-	BSF        RC2_bit+0, 2
-;auto.c,76 :: 		RC5_bit = 0;
-	BCF        RC5_bit+0, 5
-;auto.c,77 :: 		RC4_bit = 0;
-	BCF        RC4_bit+0, 4
-;auto.c,78 :: 		}
-	RETURN
-; end of _girarIzquierda
-
-_moverAtras:
-
-;auto.c,81 :: 		void moverAtras(){
-;auto.c,82 :: 		RC1_bit = 0;
-	BCF        RC1_bit+0, 1
-;auto.c,83 :: 		RC2_bit = 0;
-	BCF        RC2_bit+0, 2
-;auto.c,84 :: 		RC5_bit = 1;
-	BSF        RC5_bit+0, 5
-;auto.c,85 :: 		RC4_bit = 1;
-	BSF        RC4_bit+0, 4
-;auto.c,86 :: 		}
-	RETURN
-; end of _moverAtras
-
 _moverEnAutomatico:
 
-;auto.c,87 :: 		void moverEnAutomatico(){
-;auto.c,88 :: 		while (uart_rd_temp != 'e') { /* Si se le envía e se sale de modo manual */
-L_moverEnAutomatico17:
-	MOVF       _uart_rd_temp+0, 0
-	XORLW      101
-	BTFSC      STATUS+0, 2
-	GOTO       L_moverEnAutomatico18
-;auto.c,89 :: 		Lcd_Out(2,6,txtAutomatic);
+;auto.c,185 :: 		void moverEnAutomatico(){
+;auto.c,186 :: 		uart_rd_temp = ' ';
+	MOVLW      32
+	MOVWF      _uart_rd_temp+0
+;auto.c,187 :: 		bandera_automatico = 1;       /* Con esta bandera se valida en la interrupcion que hacer cuando ocurre un choque. */
+	MOVLW      1
+	MOVWF      _bandera_automatico+0
+	MOVLW      0
+	MOVWF      _bandera_automatico+1
+;auto.c,188 :: 		Lcd_Cmd(_LCD_CLEAR);
+	MOVLW      1
+	MOVWF      FARG_Lcd_Cmd_out_char+0
+	CALL       _Lcd_Cmd+0
+;auto.c,189 :: 		Lcd_Out(2,6,txtAutomatic);
 	MOVLW      2
 	MOVWF      FARG_Lcd_Out_row+0
 	MOVLW      6
@@ -185,35 +403,52 @@ L_moverEnAutomatico17:
 	MOVLW      _txtAutomatic+0
 	MOVWF      FARG_Lcd_Out_text+0
 	CALL       _Lcd_Out+0
-;auto.c,91 :: 		RC1_bit = 1;
+;auto.c,191 :: 		RC1_bit = 1;
 	BSF        RC1_bit+0, 1
-;auto.c,92 :: 		RC2_bit = 1;
+;auto.c,192 :: 		RC2_bit = 1;
 	BSF        RC2_bit+0, 2
-;auto.c,93 :: 		RC5_bit = 0;
+;auto.c,193 :: 		RC5_bit = 0;
 	BCF        RC5_bit+0, 5
-;auto.c,94 :: 		RC4_bit = 0;
+;auto.c,194 :: 		RC4_bit = 0;
 	BCF        RC4_bit+0, 4
-;auto.c,97 :: 		}
-	GOTO       L_moverEnAutomatico17
-L_moverEnAutomatico18:
-;auto.c,99 :: 		}
+;auto.c,195 :: 		cargarDato();
+	CALL       _cargarDato+0
+;auto.c,196 :: 		while (uart_rd_temp != 'e') { /* Si se le envía e se sale de modo automatico. */
+L_moverEnAutomatico24:
+	MOVF       _uart_rd_temp+0, 0
+	XORLW      101
+	BTFSC      STATUS+0, 2
+	GOTO       L_moverEnAutomatico25
+;auto.c,197 :: 		waitSignal();
+	CALL       _waitSignal+0
+;auto.c,198 :: 		cargarDato();
+	CALL       _cargarDato+0
+;auto.c,201 :: 		if(uart_rd_temp == 'e')
+	MOVF       _uart_rd_temp+0, 0
+	XORLW      101
+	BTFSS      STATUS+0, 2
+	GOTO       L_moverEnAutomatico26
+;auto.c,203 :: 		RC1_bit = 0;
+	BCF        RC1_bit+0, 1
+;auto.c,204 :: 		RC2_bit = 0;
+	BCF        RC2_bit+0, 2
+;auto.c,205 :: 		RC5_bit = 0;
+	BCF        RC5_bit+0, 5
+;auto.c,206 :: 		RC4_bit = 0;
+	BCF        RC4_bit+0, 4
+;auto.c,207 :: 		}
+L_moverEnAutomatico26:
+;auto.c,209 :: 		}
+	GOTO       L_moverEnAutomatico24
+L_moverEnAutomatico25:
+;auto.c,210 :: 		pararVehiculo();
+	CALL       _pararVehiculo+0
+;auto.c,211 :: 		bandera_automatico = 0;       /* al enviar e se sale de modo automatico.*/
+	CLRF       _bandera_automatico+0
+	CLRF       _bandera_automatico+1
+;auto.c,212 :: 		}
 	RETURN
 ; end of _moverEnAutomatico
-
-_checkADC:
-
-;auto.c,101 :: 		si está cerca de choque, se cambia bandera a 0*/
-;auto.c,102 :: 		bandera_mover = 0;
-	CLRF       _bandera_mover+0
-	CLRF       _bandera_mover+1
-;auto.c,103 :: 		return -1;
-	MOVLW      255
-	MOVWF      R0+0
-	MOVLW      255
-	MOVWF      R0+1
-;auto.c,104 :: 		}
-	RETURN
-; end of _checkADC
 
 _interrupt:
 	MOVWF      R15+0
@@ -224,44 +459,180 @@ _interrupt:
 	MOVWF      ___savePCLATH+0
 	CLRF       PCLATH+0
 
-;auto.c,106 :: 		void interrupt(){
-;auto.c,116 :: 		if (PIR1 & 0x01)
-	BTFSS      PIR1+0, 0
-	GOTO       L_interrupt19
-;auto.c,119 :: 		PIR1 &= ~0x01; // Clear flag
-	BCF        PIR1+0, 0
-;auto.c,120 :: 		T1CON &= ~0x01; // Disable counter to avoid errors
-	BCF        T1CON+0, 0
-;auto.c,123 :: 		temp_res_forward = ADC_Read(2);
-	MOVLW      2
-	MOVWF      FARG_ADC_Read_channel+0
-	CALL       _ADC_Read+0
-	MOVF       R0+0, 0
-	MOVWF      _temp_res_forward+0
-	MOVF       R0+1, 0
-	MOVWF      _temp_res_forward+1
-;auto.c,124 :: 		temp_res_backward = ADC_Read(3);
-	MOVLW      3
-	MOVWF      FARG_ADC_Read_channel+0
-	CALL       _ADC_Read+0
-	MOVF       R0+0, 0
-	MOVWF      _temp_res_backward+0
-	MOVF       R0+1, 0
-	MOVWF      _temp_res_backward+1
-;auto.c,127 :: 		TMR1L = 0x24;
-	MOVLW      36
-	MOVWF      TMR1L+0
-;auto.c,128 :: 		TMR1H = 0xCF;
-	MOVLW      207
-	MOVWF      TMR1H+0
-;auto.c,129 :: 		T1CON |= 0x01; // Enable counter
+;auto.c,216 :: 		void interrupt(){
+;auto.c,217 :: 		unsigned long duration = 0;
+	CLRF       interrupt_duration_L0+0
+	CLRF       interrupt_duration_L0+1
+	CLRF       interrupt_duration_L0+2
+	CLRF       interrupt_duration_L0+3
+;auto.c,220 :: 		if(INTCON.RBIF){
+	BTFSS      INTCON+0, 0
+	GOTO       L_interrupt27
+;auto.c,221 :: 		T1CON.TMR1ON = 1;       // ON Counter
 	BSF        T1CON+0, 0
-;auto.c,130 :: 		return;
-	GOTO       L__interrupt34
-;auto.c,131 :: 		}
-L_interrupt19:
-;auto.c,132 :: 		}
-L__interrupt34:
+;auto.c,222 :: 		while(Echo == 1);
+L_interrupt28:
+	BTFSS      PORTB+0, 6
+	GOTO       L_interrupt29
+	GOTO       L_interrupt28
+L_interrupt29:
+;auto.c,223 :: 		T1CON.TMR1ON = 0;
+	BCF        T1CON+0, 0
+;auto.c,224 :: 		TMR = (unsigned int) TMR1H << 8;
+	MOVF       TMR1H+0, 0
+	MOVWF      R3+0
+	CLRF       R3+1
+	MOVF       R3+0, 0
+	MOVWF      R0+1
+	CLRF       R0+0
+	MOVF       R0+0, 0
+	MOVWF      _TMR+0
+	MOVF       R0+1, 0
+	MOVWF      _TMR+1
+;auto.c,225 :: 		TMR = TMR + TMR1L;          // Combine 2x counter byte into single integer
+	MOVF       TMR1L+0, 0
+	ADDWF      R0+0, 1
+	BTFSC      STATUS+0, 0
+	INCF       R0+1, 1
+	MOVF       R0+0, 0
+	MOVWF      _TMR+0
+	MOVF       R0+1, 0
+	MOVWF      _TMR+1
+;auto.c,227 :: 		duration = (TMR/10) * 8;  // Duration Formula = TMR * 0.2us(Clock speed) * 4 (Timer Prescale)
+	MOVLW      10
+	MOVWF      R4+0
+	MOVLW      0
+	MOVWF      R4+1
+	CALL       _Div_16x16_U+0
+	MOVLW      3
+	MOVWF      R2+0
+	MOVF       R0+0, 0
+	MOVWF      interrupt_duration_L0+0
+	MOVF       R0+1, 0
+	MOVWF      interrupt_duration_L0+1
+	MOVF       R2+0, 0
+L__interrupt56:
+	BTFSC      STATUS+0, 2
+	GOTO       L__interrupt57
+	RLF        interrupt_duration_L0+0, 1
+	RLF        interrupt_duration_L0+1, 1
+	BCF        interrupt_duration_L0+0, 0
+	ADDLW      255
+	GOTO       L__interrupt56
+L__interrupt57:
+	MOVLW      0
+	MOVWF      interrupt_duration_L0+2
+	MOVWF      interrupt_duration_L0+3
+;auto.c,229 :: 		distance_cm = duration / 58 ;   // Refer HC-SR04 Datasheet
+	MOVLW      58
+	MOVWF      R4+0
+	CLRF       R4+1
+	CLRF       R4+2
+	CLRF       R4+3
+	MOVF       interrupt_duration_L0+0, 0
+	MOVWF      R0+0
+	MOVF       interrupt_duration_L0+1, 0
+	MOVWF      R0+1
+	MOVF       interrupt_duration_L0+2, 0
+	MOVWF      R0+2
+	MOVF       interrupt_duration_L0+3, 0
+	MOVWF      R0+3
+	CALL       _Div_32x32_U+0
+	MOVF       R0+0, 0
+	MOVWF      _distance_cm+0
+	MOVF       R0+1, 0
+	MOVWF      _distance_cm+1
+;auto.c,230 :: 		distance_inc = duration / 148;
+	MOVLW      148
+	MOVWF      R4+0
+	CLRF       R4+1
+	CLRF       R4+2
+	CLRF       R4+3
+	MOVF       interrupt_duration_L0+0, 0
+	MOVWF      R0+0
+	MOVF       interrupt_duration_L0+1, 0
+	MOVWF      R0+1
+	MOVF       interrupt_duration_L0+2, 0
+	MOVWF      R0+2
+	MOVF       interrupt_duration_L0+3, 0
+	MOVWF      R0+3
+	CALL       _Div_32x32_U+0
+	MOVF       R0+0, 0
+	MOVWF      _distance_inc+0
+	MOVF       R0+1, 0
+	MOVWF      _distance_inc+1
+;auto.c,231 :: 		if(distance_cm < 30)
+	MOVLW      0
+	SUBWF      _distance_cm+1, 0
+	BTFSS      STATUS+0, 2
+	GOTO       L__interrupt58
+	MOVLW      30
+	SUBWF      _distance_cm+0, 0
+L__interrupt58:
+	BTFSC      STATUS+0, 0
+	GOTO       L_interrupt30
+;auto.c,233 :: 		if (!bandera_mover && bandera_automatico) {/* Si hay obstaculo y esta en Automatico*/
+	MOVF       _bandera_mover+0, 0
+	IORWF      _bandera_mover+1, 0
+	BTFSS      STATUS+0, 2
+	GOTO       L_interrupt33
+	MOVF       _bandera_automatico+0, 0
+	IORWF      _bandera_automatico+1, 0
+	BTFSC      STATUS+0, 2
+	GOTO       L_interrupt33
+L__interrupt54:
+;auto.c,234 :: 		darVuelta();
+	CALL       _darVuelta+0
+;auto.c,235 :: 		}else if(!bandera_mover && !bandera_automatico){
+	GOTO       L_interrupt34
+L_interrupt33:
+	MOVF       _bandera_mover+0, 0
+	IORWF      _bandera_mover+1, 0
+	BTFSS      STATUS+0, 2
+	GOTO       L_interrupt37
+	MOVF       _bandera_automatico+0, 0
+	IORWF      _bandera_automatico+1, 0
+	BTFSS      STATUS+0, 2
+	GOTO       L_interrupt37
+L__interrupt53:
+;auto.c,236 :: 		pararVehiculo();
+	CALL       _pararVehiculo+0
+;auto.c,237 :: 		bandera_mover = 0;
+	CLRF       _bandera_mover+0
+	CLRF       _bandera_mover+1
+;auto.c,238 :: 		}
+L_interrupt37:
+L_interrupt34:
+;auto.c,239 :: 		}else {
+	GOTO       L_interrupt38
+L_interrupt30:
+;auto.c,240 :: 		bandera_mover = 1;
+	MOVLW      1
+	MOVWF      _bandera_mover+0
+	MOVLW      0
+	MOVWF      _bandera_mover+1
+;auto.c,241 :: 		avanzarVehiculo();
+	CALL       _avanzarVehiculo+0
+;auto.c,242 :: 		}
+L_interrupt38:
+;auto.c,243 :: 		distance_cm = 0, distance_inc = 0, TMR = 0;
+	CLRF       _distance_cm+0
+	CLRF       _distance_cm+1
+	CLRF       _distance_inc+0
+	CLRF       _distance_inc+1
+	CLRF       _TMR+0
+	CLRF       _TMR+1
+;auto.c,245 :: 		INTCON.RBIF = 0;        // Clear PortB Interrupt Flag
+	BCF        INTCON+0, 0
+;auto.c,246 :: 		}
+L_interrupt27:
+;auto.c,248 :: 		contadorInterrupt++;                /* contando 20 entradas a la interrupcion */
+	INCF       _contadorInterrupt+0, 1
+	BTFSC      STATUS+0, 2
+	INCF       _contadorInterrupt+1, 1
+;auto.c,249 :: 		return;
+;auto.c,250 :: 		}
+L__interrupt55:
 	MOVF       ___savePCLATH+0, 0
 	MOVWF      PCLATH+0
 	SWAPF      ___saveSTATUS+0, 0
@@ -273,120 +644,91 @@ L__interrupt34:
 
 _main:
 
-;auto.c,133 :: 		void main() {
-;auto.c,134 :: 		ANSEL  = 0b00001100;              // Configure AN2/AN3 pin as analog
-	MOVLW      12
-	MOVWF      ANSEL+0
-;auto.c,135 :: 		ANSELH = 0;
+;auto.c,251 :: 		void main() {
+;auto.c,253 :: 		TRISA = 0b00000000; // set PORTA -> salidas
+	CLRF       TRISA+0
+;auto.c,254 :: 		TRISB = 0b01000000; // set PORTB -> salida menos el pin 6.
+	MOVLW      64
+	MOVWF      TRISB+0
+;auto.c,255 :: 		ANSEL  = 0;              // Configure AN2 pin as analog
+	CLRF       ANSEL+0
+;auto.c,256 :: 		ANSELH = 0;
 	CLRF       ANSELH+0
-;auto.c,136 :: 		C1ON_bit = 0;                      // Disable comparators
+;auto.c,257 :: 		C1ON_bit = 0;                      // Disable comparators
 	BCF        C1ON_bit+0, 7
-;auto.c,137 :: 		C2ON_bit = 0;
+;auto.c,258 :: 		C2ON_bit = 0;
 	BCF        C2ON_bit+0, 7
-;auto.c,138 :: 		INTCON = 0x80; // This will set GIE (Global interrupts)
-	MOVLW      128
+;auto.c,259 :: 		INTCON = 0b10100000; // INTERRUPCION POR TIMER0 Y GIE ACTIVADOS.
+	MOVLW      160
 	MOVWF      INTCON+0
-;auto.c,139 :: 		T1CON = 0x00; // Timer1 Stopped and preescale 1:1
-	CLRF       T1CON+0
-;auto.c,140 :: 		TMR1L = 0x24;
-	MOVLW      36
-	MOVWF      TMR1L+0
-;auto.c,141 :: 		TMR1H = 0xCF;
-	MOVLW      207
-	MOVWF      TMR1H+0
-;auto.c,142 :: 		T1CON |= 0x01; // Enable counter
-	BSF        T1CON+0, 0
-;auto.c,143 :: 		PIE1 = 0x01; // Enable Timer1 interrupt
-	MOVLW      1
-	MOVWF      PIE1+0
-;auto.c,144 :: 		TRISC = 0;                          // designate PORTC pins as output
-	CLRF       TRISC+0
-;auto.c,145 :: 		PORTC = 0;                          // set PORTC to 0
+;auto.c,261 :: 		OPTION_REG = 0b10000111; //  TMR0 temporizado:  RBPU, TOCS= INTERNAL INSTRUCTION CLOCK= 0 PSA =0   1:256
+	MOVLW      135
+	MOVWF      OPTION_REG+0
+;auto.c,262 :: 		TRISC = 0b10000000;                          // PUERTOC COMO SALIDA exepto pin 7
+	MOVLW      128
+	MOVWF      TRISC+0
+;auto.c,263 :: 		PORTC = 0;                          // LIMPIAR PUERTOC
 	CLRF       PORTC+0
-;auto.c,146 :: 		PWM1_Init(5000);                    // Initialize PWM1 module at 5KHz
-	BSF        T2CON+0, 0
-	BCF        T2CON+0, 1
-	MOVLW      99
-	MOVWF      PR2+0
-	CALL       _PWM1_Init+0
-;auto.c,147 :: 		PWM2_Init(5000);                    // Initialize PWM2 module at 5KHz
-	BSF        T2CON+0, 0
-	BCF        T2CON+0, 1
-	MOVLW      99
-	MOVWF      PR2+0
-	CALL       _PWM2_Init+0
-;auto.c,148 :: 		PWM1_Start();                       // start PWM1
-	CALL       _PWM1_Start+0
-;auto.c,149 :: 		PWM2_Start();                       // start PWM2
-	CALL       _PWM2_Start+0
-;auto.c,150 :: 		PWM1_Set_Duty(16);        // Set current duty for PWM1
-	MOVLW      16
-	MOVWF      FARG_PWM1_Set_Duty_new_duty+0
-	CALL       _PWM1_Set_Duty+0
-;auto.c,151 :: 		PWM2_Set_Duty(16);       // Set current duty for PWM2
-	MOVLW      16
-	MOVWF      FARG_PWM2_Set_Duty_new_duty+0
-	CALL       _PWM2_Set_Duty+0
-;auto.c,153 :: 		Delay_us(10);                 /* wait for acquisition time*/
+;auto.c,264 :: 		setupTimer1();
+	CALL       _setupTimer1+0
+;auto.c,265 :: 		Delay_us(10);                 /* wait for acquisition time*/
 	MOVLW      6
 	MOVWF      R13+0
-L_main20:
+L_main39:
 	DECFSZ     R13+0, 1
-	GOTO       L_main20
+	GOTO       L_main39
 	NOP
-;auto.c,154 :: 		UART1_Init(9600);                         // initialize UART1 module
+;auto.c,266 :: 		Lcd_Init();                        // Initialize LCD
+	CALL       _Lcd_Init+0
+;auto.c,269 :: 		Lcd_Out(2,0,txtDefault);                 // Write text in second row
+	MOVLW      2
+	MOVWF      FARG_Lcd_Out_row+0
+	CLRF       FARG_Lcd_Out_column+0
+	MOVLW      _txtDefault+0
+	MOVWF      FARG_Lcd_Out_text+0
+	CALL       _Lcd_Out+0
+;auto.c,270 :: 		UART1_Init(9600);                         // initialize UART1 module
 	MOVLW      51
 	MOVWF      SPBRG+0
 	BSF        TXSTA+0, 2
 	CALL       _UART1_Init+0
-;auto.c,155 :: 		Delay_ms(100);                  // Wait for UART module to stabilize
+;auto.c,271 :: 		Delay_ms(100);                  // Wait for UART module to stabilize
 	MOVLW      2
 	MOVWF      R11+0
 	MOVLW      4
 	MOVWF      R12+0
 	MOVLW      186
 	MOVWF      R13+0
-L_main21:
+L_main40:
 	DECFSZ     R13+0, 1
-	GOTO       L_main21
+	GOTO       L_main40
 	DECFSZ     R12+0, 1
-	GOTO       L_main21
+	GOTO       L_main40
 	DECFSZ     R11+0, 1
-	GOTO       L_main21
+	GOTO       L_main40
 	NOP
-;auto.c,157 :: 		Lcd_Init();                        // Initialize LCD
-	CALL       _Lcd_Init+0
-;auto.c,159 :: 		Lcd_Out(2,6,txtDefault);                 // Write text in second row
-	MOVLW      2
-	MOVWF      FARG_Lcd_Out_row+0
-	MOVLW      6
-	MOVWF      FARG_Lcd_Out_column+0
-	MOVLW      _txtDefault+0
-	MOVWF      FARG_Lcd_Out_text+0
-	CALL       _Lcd_Out+0
-;auto.c,160 :: 		while (1) {
-L_main22:
-;auto.c,161 :: 		Lcd_Out(2,6,txtDefault);                 // Write text in second row
-	MOVLW      2
-	MOVWF      FARG_Lcd_Out_row+0
-	MOVLW      6
-	MOVWF      FARG_Lcd_Out_column+0
-	MOVLW      _txtDefault+0
-	MOVWF      FARG_Lcd_Out_text+0
-	CALL       _Lcd_Out+0
-;auto.c,162 :: 		if (UART1_Data_Ready()) {     // If data is received,
+;auto.c,272 :: 		moverEnAutomatico();
+	CALL       _moverEnAutomatico+0
+;auto.c,273 :: 		while (1) {
+L_main41:
+;auto.c,274 :: 		waitSignal();
+	CALL       _waitSignal+0
+;auto.c,275 :: 		if (UART1_Data_Ready()) {     // If data is received,
 	CALL       _UART1_Data_Ready+0
 	MOVF       R0+0, 0
 	BTFSC      STATUS+0, 2
-	GOTO       L_main24
-;auto.c,164 :: 		uart_rd = 'A';
-	MOVLW      65
+	GOTO       L_main43
+;auto.c,276 :: 		uart_rd = UART1_Read();     // leer el dato recibido del celular
+	CALL       _UART1_Read+0
+	MOVF       R0+0, 0
 	MOVWF      _uart_rd+0
-;auto.c,165 :: 		switch (uart_rd) {
-	GOTO       L_main25
-;auto.c,166 :: 		case 'A': {               /* Modo automático */
-L_main27:
-;auto.c,167 :: 		Lcd_Out(2,6,txtAutomatic);
+;auto.c,277 :: 		waitSignal();
+	CALL       _waitSignal+0
+;auto.c,278 :: 		switch (uart_rd) {
+	GOTO       L_main44
+;auto.c,279 :: 		case 'A': {               /* Modo automático */
+L_main46:
+;auto.c,280 :: 		Lcd_Out(2,6,txtAutomatic);
 	MOVLW      2
 	MOVWF      FARG_Lcd_Out_row+0
 	MOVLW      6
@@ -394,36 +736,36 @@ L_main27:
 	MOVLW      _txtAutomatic+0
 	MOVWF      FARG_Lcd_Out_text+0
 	CALL       _Lcd_Out+0
-;auto.c,168 :: 		moverEnAutomatico();
+;auto.c,281 :: 		moverEnAutomatico();
 	CALL       _moverEnAutomatico+0
-;auto.c,169 :: 		break;
-	GOTO       L_main26
-;auto.c,171 :: 		case 'M': {
-L_main28:
-;auto.c,172 :: 		moverManual();
+;auto.c,282 :: 		break;
+	GOTO       L_main45
+;auto.c,284 :: 		case 'M': {
+L_main47:
+;auto.c,285 :: 		moverManual();
 	CALL       _moverManual+0
-;auto.c,173 :: 		break;
-	GOTO       L_main26
-;auto.c,175 :: 		default:
-L_main29:
-;auto.c,176 :: 		break;
-	GOTO       L_main26
-;auto.c,177 :: 		}
-L_main25:
+;auto.c,286 :: 		break;
+	GOTO       L_main45
+;auto.c,288 :: 		default:
+L_main48:
+;auto.c,289 :: 		break;
+	GOTO       L_main45
+;auto.c,290 :: 		}
+L_main44:
 	MOVF       _uart_rd+0, 0
 	XORLW      65
 	BTFSC      STATUS+0, 2
-	GOTO       L_main27
+	GOTO       L_main46
 	MOVF       _uart_rd+0, 0
 	XORLW      77
 	BTFSC      STATUS+0, 2
-	GOTO       L_main28
-	GOTO       L_main29
-L_main26:
-;auto.c,178 :: 		}
-L_main24:
-;auto.c,179 :: 		}
-	GOTO       L_main22
-;auto.c,180 :: 		}
+	GOTO       L_main47
+	GOTO       L_main48
+L_main45:
+;auto.c,291 :: 		}
+L_main43:
+;auto.c,292 :: 		}
+	GOTO       L_main41
+;auto.c,293 :: 		}
 	GOTO       $+0
 ; end of _main

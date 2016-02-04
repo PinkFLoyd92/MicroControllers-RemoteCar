@@ -1,15 +1,7 @@
 main
 	__CC2DW
 		____DoICP
-	PWM1_Init
-	PWM2_Init
-	PWM1_Start
-	PWM2_Start
-	PWM1_Set_Duty
-		Mul_16x16_U
-	PWM2_Set_Duty
-		Mul_16x16_U
-	UART1_Init
+	setupTimer1
 	Lcd_Init
 		Delay_5500us
 		Delay_1us
@@ -23,8 +15,12 @@ main
 				Delay_1us
 				Delay_5500us
 				Delay_50us
-	UART1_Data_Ready
+	UART1_Init
 	moverEnAutomatico
+		Lcd_Cmd
+			Delay_1us
+			Delay_5500us
+			Delay_50us
 		Lcd_Out
 			Lcd_Cmd
 				Delay_1us
@@ -35,7 +31,19 @@ main
 					Delay_1us
 					Delay_5500us
 					Delay_50us
+		cargarDato
+			UART1_Data_Ready
+			UART1_Read
+		waitSignal
+		pararVehiculo
+	waitSignal
+	UART1_Data_Ready
+	UART1_Read
 	moverManual
+		cargarDato
+			UART1_Data_Ready
+			UART1_Read
+		waitSignal
 		Lcd_Out
 			Lcd_Cmd
 				Delay_1us
@@ -46,6 +54,21 @@ main
 					Delay_1us
 					Delay_5500us
 					Delay_50us
+		avanzarVehiculo
+		moverAtras
+		girarIzquierda
+		girarDerecha
+		pararVehiculo
+		Lcd_Cmd
+			Delay_1us
+			Delay_5500us
+			Delay_50us
 interrupt
-	ADC_Read
-		Delay_22us
+	Div_16x16_U
+	Div_32x32_U
+	darVuelta
+		girarDerecha
+		avanzarVehiculo
+		girarIzquierda
+	pararVehiculo
+	avanzarVehiculo
