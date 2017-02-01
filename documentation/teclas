@@ -1,0 +1,4 @@
+RA0(TRIGGER), RB6(ECHO) -> ADC
+RB0,RB1,RB2,RB3,RB5 -> LCD
+RC1,RC2,RC4,RC5 -> Motores
+Uart-> 

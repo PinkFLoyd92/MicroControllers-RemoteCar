@@ -16,6 +16,9 @@ main
 				Delay_5500us
 				Delay_50us
 	UART1_Init
+	UART1_Data_Ready
+	UART1_Read
+	waitSignal
 	moverEnAutomatico
 		Lcd_Cmd
 			Delay_1us
@@ -36,9 +39,10 @@ main
 			UART1_Read
 		waitSignal
 		pararVehiculo
-	waitSignal
-	UART1_Data_Ready
-	UART1_Read
+	Lcd_Cmd
+		Delay_1us
+		Delay_5500us
+		Delay_50us
 	moverManual
 		cargarDato
 			UART1_Data_Ready

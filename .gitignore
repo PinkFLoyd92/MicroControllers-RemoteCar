@@ -1,0 +1,16 @@
+*.asm
+*.bmk
+*.brk
+*.dct
+*.cp
+*.cfg
+*.dlt
+*.hex
+*.ini
+*.dic
+*.mcppi
+*.lst
+*.dbg
+*.lst
+*.mcl
+.idea/

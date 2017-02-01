@@ -1,13 +1,47 @@
-0	1	mikroCPIC1618.exe -MSF -DBG -pP16F887 -DL -O11111114 -fo8 -N"Z:\home\sebas\Documents\ESPOL\Laboratorio de Microcontroladores\proyecto2doparcial\pic-program\auto.mcppi" -SP"C:\Program Files (x86)\Mikroelektronika\mikroC PRO for PIC\defs\" -SP"C:\Program Files (x86)\Mikroelektronika\mikroC PRO for PIC\Uses\P16\" -SP"Z:\home\sebas\Documents\ESPOL\Laboratorio de Microcontroladores\proyecto2doparcial\pic-program\" "auto.c" "__Lib_Math.mcl" "__Lib_MathDouble.mcl" "__Lib_System.mcl" "__Lib_Delays.mcl" "__Lib_CType.mcl" "__Lib_CString.mcl" "__Lib_CStdlib.mcl" "__Lib_CMath.mcl" "__Lib_MemManager.mcl" "__Lib_Conversions.mcl" "__Lib_Sprinti.mcl" "__Lib_Sprintl.mcl" "__Lib_Time.mcl" "__Lib_Trigonometry.mcl" "__Lib_Button.mcl" "__Lib_Keypad4x4.mcl" "__Lib_Manchester.mcl" "__Lib_OneWire.mcl" "__Lib_PS2.mcl" "__Lib_Sound.mcl" "__Lib_SoftI2C.mcl" "__Lib_SoftSPI.mcl" "__Lib_SoftUART.mcl" "__Lib_ADC_88X.mcl" "__Lib_EEPROM.mcl" "__Lib_FLASH_RW.mcl" "__Lib_I2C_c34.mcl" "__Lib_PWM_c21.mcl" "__Lib_SPI_c345.mcl" "__Lib_UART_c67.mcl" "__Lib_PortExpander.mcl" "__Lib_CANSPI.mcl" "__Lib_CF.mcl" "__Lib_GlcdFonts.mcl" "__Lib_Glcd.mcl" "__Lib_LcdConsts.mcl" "__Lib_Lcd.mcl" "__Lib_RS485.mcl" "__Lib_S1D13700.mcl" "__Lib_T6963C.mcl" "__Lib_SPIGlcd.mcl" "__Lib_SPILcd.mcl" "__Lib_SPILcd8.mcl" "__Lib_SPIT6963C.mcl" "__Lib_EthEnc28j60.mcl" "__Lib_EthEnc24j600.mcl" "__Lib_TouchPanel.mcl"	 
+0	1	mikroCPIC1618.exe -MSF -DBG -pP16F887 -DL -O11111114 -fo8 -N"Z:\home\sebas\Documents\ESPOL\Laboratorio de Microcontroladores\proyecto2doparcial\pic-program\auto.mcppi" -SP"C:\Program Files (x86)\Mikroelektronika\mikroC PRO for PIC\defs\" -SP"C:\Program Files (x86)\Mikroelektronika\mikroC PRO for PIC\Uses\P16\" -SP"Z:\home\sebas\Documents\ESPOL\Laboratorio de Microcontroladores\proyecto2doparcial\pic-program\" "auto.c" "auto2.c" "__Lib_Math.mcl" "__Lib_MathDouble.mcl" "__Lib_System.mcl" "__Lib_Delays.mcl" "__Lib_CType.mcl" "__Lib_CString.mcl" "__Lib_CStdlib.mcl" "__Lib_CMath.mcl" "__Lib_MemManager.mcl" "__Lib_Conversions.mcl" "__Lib_Sprinti.mcl" "__Lib_Sprintl.mcl" "__Lib_Time.mcl" "__Lib_Trigonometry.mcl" "__Lib_Button.mcl" "__Lib_Keypad4x4.mcl" "__Lib_Manchester.mcl" "__Lib_OneWire.mcl" "__Lib_PS2.mcl" "__Lib_Sound.mcl" "__Lib_SoftI2C.mcl" "__Lib_SoftSPI.mcl" "__Lib_SoftUART.mcl" "__Lib_ADC_88X.mcl" "__Lib_EEPROM.mcl" "__Lib_FLASH_RW.mcl" "__Lib_I2C_c34.mcl" "__Lib_PWM_c21.mcl" "__Lib_SPI_c345.mcl" "__Lib_UART_c67.mcl" "__Lib_PortExpander.mcl" "__Lib_CANSPI.mcl" "__Lib_CF.mcl" "__Lib_GlcdFonts.mcl" "__Lib_Glcd.mcl" "__Lib_LcdConsts.mcl" "__Lib_Lcd.mcl" "__Lib_RS485.mcl" "__Lib_S1D13700.mcl" "__Lib_T6963C.mcl" "__Lib_SPIGlcd.mcl" "__Lib_SPILcd.mcl" "__Lib_SPILcd8.mcl" "__Lib_SPIT6963C.mcl" "__Lib_EthEnc28j60.mcl" "__Lib_EthEnc24j600.mcl" "__Lib_TouchPanel.mcl"	 
 hint: 0	1138	Available RAM: 352 [bytes], Available ROM: 8192 [bytes]	 
-diagnostics: 0	126	All files Preprocessed in 242 ms	 
+diagnostics: 0	126	All files Preprocessed in 386 ms	 
 diagnostics: 0	122	Compilation Started	auto.c
 warning: 270	1509	Generated baud rate is 9615 bps (error = 0.16 percent)	auto.c
-diagnostics: 293	123	Compiled Successfully	auto.c
-diagnostics: 0	127	All files Compiled in 827 ms	 
-hint: 0	1143	Used RAM (bytes): 104 (30%)  Free RAM (bytes): 248 (70%)	Used RAM (bytes): 104 (30%)  Free RAM (bytes): 248 (70%)
-hint: 0	1143	Used ROM (program words): 1356 (17%)  Free ROM (program words): 6836 (83%)	Used ROM (program words): 1356 (17%)  Free ROM (program words): 6836 (83%)
-diagnostics: 0	125	Project Linked Successfully	auto.mcppi
-diagnostics: 0	128	Linked in 962 ms	 
-diagnostics: 0	129	Project 'auto.mcppi' completed: 2489 ms	 
-diagnostics: 0	103	Finished successfully: 31 Jan 2016, 19:13:28	auto.mcppi
+diagnostics: 299	123	Compiled Successfully	auto.c
+diagnostics: 0	122	Compilation Started	auto2.c
+warning: 218	1509	Generated baud rate is 9615 bps (error = 0.16 percent)	auto2.c
+diagnostics: 250	123	Compiled Successfully	auto2.c
+diagnostics: 0	127	All files Compiled in 1544 ms	 
+error: 22	355	Redefinition of 'txtDefault [auto2.c] '. 'txtDefault' already defined in 'auto.c'	auto2.c
+error: 23	355	Redefinition of 'txtArriba [auto2.c] '. 'txtArriba' already defined in 'auto.c'	auto2.c
+error: 24	355	Redefinition of 'txtIzquierda [auto2.c] '. 'txtIzquierda' already defined in 'auto.c'	auto2.c
+error: 25	355	Redefinition of 'txtDerecha [auto2.c] '. 'txtDerecha' already defined in 'auto.c'	auto2.c
+error: 26	355	Redefinition of 'txtAbajo [auto2.c] '. 'txtAbajo' already defined in 'auto.c'	auto2.c
+error: 27	355	Redefinition of 'txtAutomatic [auto2.c] '. 'txtAutomatic' already defined in 'auto.c'	auto2.c
+error: 31	355	Redefinition of 'distance_cm [auto2.c] '. 'distance_cm' already defined in 'auto.c'	auto2.c
+error: 31	355	Redefinition of 'distance_inc [auto2.c] '. 'distance_inc' already defined in 'auto.c'	auto2.c
+error: 31	355	Redefinition of 'TMR [auto2.c] '. 'TMR' already defined in 'auto.c'	auto2.c
+error: 34	355	Redefinition of 'uart_rd [auto2.c] '. 'uart_rd' already defined in 'auto.c'	auto2.c
+error: 35	355	Redefinition of 'uart_rd_temp [auto2.c] '. 'uart_rd_temp' already defined in 'auto.c'	auto2.c
+error: 37	355	Redefinition of 'bandera_mover [auto2.c] '. 'bandera_mover' already defined in 'auto.c'	auto2.c
+error: 38	355	Redefinition of 'bandera_automatico [auto2.c] '. 'bandera_automatico' already defined in 'auto.c'	auto2.c
+error: 0	355	Redefinition of '?ICS_txtDefault [auto2.c] '. '?ICS_txtDefault' already defined in 'auto.c'	auto2.c
+error: 0	355	Redefinition of '?ICS_txtArriba [auto2.c] '. '?ICS_txtArriba' already defined in 'auto.c'	auto2.c
+error: 0	355	Redefinition of '?ICS_txtIzquierda [auto2.c] '. '?ICS_txtIzquierda' already defined in 'auto.c'	auto2.c
+error: 0	355	Redefinition of '?ICS_txtDerecha [auto2.c] '. '?ICS_txtDerecha' already defined in 'auto.c'	auto2.c
+error: 0	355	Redefinition of '?ICS_txtAbajo [auto2.c] '. '?ICS_txtAbajo' already defined in 'auto.c'	auto2.c
+error: 0	355	Redefinition of '?ICS_txtAutomatic [auto2.c] '. '?ICS_txtAutomatic' already defined in 'auto.c'	auto2.c
+error: 0	355	Redefinition of '?ICS_distance_cm [auto2.c] '. '?ICS_distance_cm' already defined in 'auto.c'	auto2.c
+error: 0	355	Redefinition of '?ICS_distance_inc [auto2.c] '. '?ICS_distance_inc' already defined in 'auto.c'	auto2.c
+error: 0	355	Redefinition of '?ICS_TMR [auto2.c] '. '?ICS_TMR' already defined in 'auto.c'	auto2.c
+error: 0	355	Redefinition of '?ICS_bandera_mover [auto2.c] '. '?ICS_bandera_mover' already defined in 'auto.c'	auto2.c
+error: 0	355	Redefinition of '?ICS_bandera_automatico [auto2.c] '. '?ICS_bandera_automatico' already defined in 'auto.c'	auto2.c
+error: 42	355	Redefinition of 'setupTimer1 [auto2.c] '. 'setupTimer1' already defined in 'auto.c'	auto2.c
+error: 54	355	Redefinition of 'waitSignal [auto2.c] '. 'waitSignal' already defined in 'auto.c'	auto2.c
+error: 69	355	Redefinition of 'avanzarVehiculo [auto2.c] '. 'avanzarVehiculo' already defined in 'auto.c'	auto2.c
+error: 76	355	Redefinition of 'pararVehiculo [auto2.c] '. 'pararVehiculo' already defined in 'auto.c'	auto2.c
+error: 85	355	Redefinition of 'girarDerecha [auto2.c] '. 'girarDerecha' already defined in 'auto.c'	auto2.c
+error: 98	355	Redefinition of 'girarIzquierda [auto2.c] '. 'girarIzquierda' already defined in 'auto.c'	auto2.c
+error: 112	355	Redefinition of 'moverAtras [auto2.c] '. 'moverAtras' already defined in 'auto.c'	auto2.c
+error: 119	355	Redefinition of 'darVuelta [auto2.c] '. 'darVuelta' already defined in 'auto.c'	auto2.c
+error: 126	355	Redefinition of 'cargarDato [auto2.c] '. 'cargarDato' already defined in 'auto.c'	auto2.c
+error: 131	355	Redefinition of 'moverManual [auto2.c] '. 'moverManual' already defined in 'auto.c'	auto2.c
+error: 168	355	Redefinition of 'moverEnAutomatico [auto2.c] '. 'moverEnAutomatico' already defined in 'auto.c'	auto2.c
+error: 199	355	Redefinition of 'main [auto2.c] '. 'main' already defined in 'auto.c'	auto2.c
+error: 0	102	Finished (with errors): 18 Feb 2016, 15:25:35	auto.mcppi

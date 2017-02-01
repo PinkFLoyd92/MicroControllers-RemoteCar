@@ -17,7 +17,7 @@ sbit LCD_D7_Direction at TRISB3_bit;
 
 
 
-char txtDefault[] = "Esperando Seleccion A-M";
+char txtDefault[] = "Esperando Seleccion";
 char txtArriba[] = "Arriba";
 char txtIzquierda[] = "Izquierda";
 char txtDerecha[] = "Derecha";
@@ -26,147 +26,146 @@ char txtAutomatic[] = "Automatico";
 
 
 
-unsigned int temp_res_forward;
-unsigned int temp_res_backward;
+unsigned int distance_cm = 0, distance_inc = 0, TMR = 0;
 
 
 char uart_rd;
 char uart_rd_temp;
-#line 54 "Z:/home/sebas/Documents/ESPOL/Laboratorio de Microcontroladores/proyecto2doparcial/pic-program/auto.c"
+#line 53 "Z:/home/sebas/Documents/ESPOL/Laboratorio de Microcontroladores/proyecto2doparcial/pic-program/auto.c"
 int bandera_mover = 1;
 int bandera_automatico = 1;
 
-int contadorInterrupt = 0;
+
 
 void setupTimer1(){
 
 
-T1CON = 0b00100000;
-INTCON.GIE = 1;
-INTCON.PEIE = 1;
-INTCON.RBIE = 1;
-INTCON.RBIF = 0;
+ T1CON = 0b00100000;
+ INTCON.GIE = 1;
+ INTCON.PEIE = 1;
+ INTCON.RBIE = 1;
+ INTCON.RBIF = 0;
 
 
-IOCB.IOCB6 = 1;
+ IOCB.IOCB6 = 1;
 }
 void waitSignal(){
-TMR1H = 0;
-TMR1L = 0;
-if( PORTB.RB6  == 0){
- PORTA.RA0  = 0;
-Delay_us(2);
- PORTA.RA0  = 1;
-Delay_us(10);
- PORTA.RA0  = 0;
-}
+ TMR1H = 0;
+ TMR1L = 0;
+ if( PORTB.RB6  == 0){
+  PORTA.RA0  = 0;
+ Delay_us(2);
+  PORTA.RA0  = 1;
+ Delay_us(10);
+  PORTA.RA0  = 0;
+ }
 }
 
 
 
 
 void avanzarVehiculo(){
-RC1_bit = 1;
-RC2_bit = 1;
-RC7_bit = 0;
-RC6_bit = 0;
+ RC1_bit = 1;
+ RC2_bit = 1;
+ RC7_bit = 0;
+ RC6_bit = 0;
 }
 
 void pararVehiculo(){
-RC1_bit = 0;
-RC2_bit = 0;
-RC7_bit = 0;
-RC6_bit = 0;
+ RC1_bit = 0;
+ RC2_bit = 0;
+ RC7_bit = 0;
+ RC6_bit = 0;
 }
-#line 102 "Z:/home/sebas/Documents/ESPOL/Laboratorio de Microcontroladores/proyecto2doparcial/pic-program/auto.c"
+#line 101 "Z:/home/sebas/Documents/ESPOL/Laboratorio de Microcontroladores/proyecto2doparcial/pic-program/auto.c"
 void girarDerecha(){
-RC1_bit = 1;
-RC2_bit = 0;
-RC5_bit = 0;
-RC4_bit = 0;
-Delay_ms(2000);
+ RC1_bit = 1;
+ RC2_bit = 0;
+ RC5_bit = 0;
+ RC4_bit = 0;
+ Delay_ms(2000);
 
-RC1_bit = 0;
-RC2_bit = 0;
-RC7_bit = 0;
-RC6_bit = 0;
+ RC1_bit = 0;
+ RC2_bit = 0;
+ RC7_bit = 0;
+ RC6_bit = 0;
 }
 
 void girarIzquierda(){
-RC1_bit = 0;
-RC2_bit = 1;
-RC5_bit = 0;
-RC4_bit = 0;
-Delay_ms(2000);
+ RC1_bit = 0;
+ RC2_bit = 1;
+ RC5_bit = 0;
+ RC4_bit = 0;
+ Delay_ms(2000);
 
-RC1_bit = 0;
-RC2_bit = 0;
-RC7_bit = 0;
-RC6_bit = 0;
+ RC1_bit = 0;
+ RC2_bit = 0;
+ RC7_bit = 0;
+ RC6_bit = 0;
 }
 
 
 void moverAtras(){
-RC1_bit = 0;
-RC2_bit = 0;
-RC5_bit = 1;
-RC4_bit = 1;
+ RC1_bit = 0;
+ RC2_bit = 0;
+ RC5_bit = 1;
+ RC4_bit = 1;
 }
 
 void darVuelta(){
-girarDerecha();
-avanzarVehiculo();
-Delay_ms(1000);
-girarIzquierda();
-avanzarVehiculo();
+ girarDerecha();
+ avanzarVehiculo();
+ Delay_ms(1000);
+ girarIzquierda();
+ avanzarVehiculo();
 }
 void cargarDato(){
-if (UART1_Data_Ready())
+ if (UART1_Data_Ready())
  uart_rd_temp = UART1_Read();
 
 }
 void moverManual(){
-uart_rd_temp = ' ';
-cargarDato();
-bandera_automatico = 0;
-while (uart_rd_temp != 'e') {
+ uart_rd_temp = ' ';
+ cargarDato();
+ bandera_automatico = 0;
+ while (uart_rd_temp != 'e') {
 
-waitSignal();
-cargarDato();
-if (uart_rd_temp == 'u' && bandera_mover) {
-Lcd_Out(2,6,txtArriba);
-avanzarVehiculo();
-}
+ waitSignal();
+ cargarDato();
+ if (uart_rd_temp == 'u' && bandera_mover) {
+ Lcd_Out(2,6,txtArriba);
+ avanzarVehiculo();
+ }
  else if (uart_rd_temp == 'd' && bandera_mover) {
-Lcd_Out(2,6,txtAbajo);
-moverAtras();
-}
+ Lcd_Out(2,6,txtAbajo);
+ moverAtras();
+ }
  else if (uart_rd_temp == 'l' && bandera_mover) {
-Lcd_Out(2,6,txtAbajo);
-girarIzquierda();
-avanzarVehiculo();
-}
+ Lcd_Out(2,6,txtAbajo);
+ girarIzquierda();
+ avanzarVehiculo();
+ }
  else if (uart_rd_temp == 'r' && bandera_mover) {
-Lcd_Out(2,6,txtAbajo);
-girarDerecha();
-avanzarVehiculo();
-}
+ Lcd_Out(2,6,txtAbajo);
+ girarDerecha();
+ avanzarVehiculo();
+ }
 
-}
-pararVehiculo();
-Lcd_Cmd(_LCD_CLEAR);
-Lcd_Out(2,6,"Se salió de modo manual.");
-Delay_ms(100);
-uart_rd_temp = ' ';
+ }
+ pararVehiculo();
+ Lcd_Cmd(_LCD_CLEAR);
+ Lcd_Out(2,6,"Se salio de modo manual...");
+ Delay_ms(1000);
+ uart_rd_temp = ' ';
 
 
 }
 
 void moverEnAutomatico(){
-uart_rd_temp = ' ';
-bandera_automatico = 1;
-Lcd_Cmd(_LCD_CLEAR);
-Lcd_Out(2,6,txtAutomatic);
+ uart_rd_temp = ' ';
+ bandera_automatico = 1;
+ Lcd_Cmd(_LCD_CLEAR);
+ Lcd_Out(2,6,txtAutomatic);
 
  RC1_bit = 1;
  RC2_bit = 1;
@@ -180,6 +179,8 @@ Lcd_Out(2,6,txtAutomatic);
 
  if(uart_rd_temp == 'e')
  {
+ Lcd_Cmd(_LCD_CLEAR);
+ Lcd_Out(2,6,"Se paro el vehiculo");
  RC1_bit = 0;
  RC2_bit = 0;
  RC5_bit = 0;
@@ -192,7 +193,6 @@ Lcd_Out(2,6,txtAutomatic);
 }
 
 
-unsigned int distance_cm = 0, distance_inc = 0, TMR = 0;
 void interrupt(){
  unsigned long duration = 0;
 
@@ -210,9 +210,9 @@ void interrupt(){
  distance_inc = duration / 148;
  if(distance_cm < 30)
  {
- if (!bandera_mover && bandera_automatico) {
+ if (bandera_mover && bandera_automatico) {
  darVuelta();
- }else if(!bandera_mover && !bandera_automatico){
+ }else if(bandera_mover && !bandera_automatico){
  pararVehiculo();
  bandera_mover = 0;
  }
@@ -225,7 +225,7 @@ void interrupt(){
  INTCON.RBIF = 0;
  }
 
- contadorInterrupt++;
+
  return;
 }
 void main() {
@@ -236,7 +236,7 @@ void main() {
  ANSELH = 0;
  C1ON_bit = 0;
  C2ON_bit = 0;
- INTCON = 0b10100000;
+ INTCON = 0b10000000;
 
  OPTION_REG = 0b10000111;
  TRISC = 0b10000000;
@@ -249,9 +249,9 @@ void main() {
  Lcd_Out(2,0,txtDefault);
  UART1_Init(9600);
  Delay_ms(100);
- moverEnAutomatico();
+
  while (1) {
- waitSignal();
+
  if (UART1_Data_Ready()) {
  uart_rd = UART1_Read();
  waitSignal();
@@ -259,10 +259,16 @@ void main() {
  case 'A': {
  Lcd_Out(2,6,txtAutomatic);
  moverEnAutomatico();
+ uart_rd = ' ';
+ Lcd_Cmd(_LCD_CLEAR);
+ Lcd_Out(2,0,txtDefault);
  break;
  }
  case 'M': {
  moverManual();
+ uart_rd = ' ';
+ Lcd_Cmd(_LCD_CLEAR);
+ Lcd_Out(2,0,txtDefault);
  break;
  }
  default:
